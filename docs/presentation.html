@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.24">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Will Dean">
+
+<title>Streamline Python Package Workflows – Streamline Python Release with Github</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-ff63373b1067ca6f91cf1456aa1f00a2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Streamline Python Release with Github</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./presentation.html" aria-current="page"> 
+<span class="menu-text">Presentation</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="presentation.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Streamline Python Package Workflows</h1>
+<p class="subtitle lead">Automation for Releases, Quality, and More</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p><a href="https://github.com/williambdean">Will Dean</a> </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="who-is-this-talk-for" class="level2">
+<h2 class="anchored" data-anchor-id="who-is-this-talk-for">Who is this talk for?</h2>
+<ul>
+<li>Someone trying to get release a Python package with minimal overhead.</li>
+<li>Someone with an idea for a package usable for themselves or their colleagues.</li>
+<li>Demystifying package development.</li>
+<li>Highlighting the realities of maintenance and how to simplify it with automation.</li>
+</ul>
+<hr>
+</section>
+<section id="agenda-the-workflow-in-action" class="level2">
+<h2 class="anchored" data-anchor-id="agenda-the-workflow-in-action">Agenda: The Workflow in Action</h2>
+<ul>
+<li>What setting up the GitHub Actions looks like</li>
+<li>What making a release looks like: From Issues to PRs to Releases</li>
+<li>Some pre-commit hooks to look out for</li>
+<li>Tips:
+<ul>
+<li>When you see a python package you like, check out how they handle their releases and manage their project.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="motivation" class="level2">
+<h2 class="anchored" data-anchor-id="motivation">Motivation</h2>
+<ul>
+<li>I made a cool Python package and wanted to share and reuse it.</li>
+<li>With a few packages, I noticed maintenance became a challenge.</li>
+<li>I want to focus on coding, not the overhead.</li>
+</ul>
+<hr>
+</section>
+<section id="showcase-frame-search" class="level2">
+<h2 class="anchored" data-anchor-id="showcase-frame-search">Showcase: <code>frame-search</code></h2>
+<p>Use <a href="https://github.com/williambdean/frame-search"><code>frame-search</code></a> to add GitHub search-like functionality to <code>pandas</code>, <code>polars</code>, and more DataFrame libraries.</p>
+<p>Showcase of the package:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> frame_search  <span class="co"># noqa: F401</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>data: pl.DataFrame <span class="op">=</span> ...</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>data.search(<span class="st">"column_name:&gt;value another_column:5..10"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="showcase-frame-search-contd" class="level2">
+<h2 class="anchored" data-anchor-id="showcase-frame-search-contd">Showcase: <code>frame-search</code> (contd)</h2>
+<p>This is helpful for filtering DataFrames using string inputs. Say, in a <a href="https://williambdean.github.io/frame-search/">marimo notebook</a>.</p>
+<p><img src="./assets/marimo-example.png" class="img-fluid"></p>
+<hr>
+</section>
+<section id="the-maintenance-challenge" class="level2">
+<h2 class="anchored" data-anchor-id="the-maintenance-challenge">The Maintenance Challenge</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>Why make a package?</p>
+<ul>
+<li>Reusability for yourself and others via <code>pip install</code></li>
+<li>Extend functionality of existing libraries</li>
+<li>Provide different interfaces (e.g., CLI, GUI, API, sugary syntax)</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p>Why not make a package?</p>
+<ul>
+<li>Something already exists
+<ul>
+<li>Maybe contribute to it instead?</li>
+</ul></li>
+<li>Overhead of maintenance</li>
+</ul>
+</div>
+</div>
+<hr>
+</section>
+<section id="the-no-brainer-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="the-no-brainer-workflow">The “No-Brainer” Workflow</h2>
+<ul>
+<li><strong>Idea to Code:</strong> Jot down ideas in GitHub Issues with labels.</li>
+<li><strong>Focus on Coding:</strong> Develop features/fixes.</li>
+<li><strong>Easy Release:</strong> Update version and make a GitHub Release.</li>
+<li><strong>Goodies for Free:</strong> Automated release notes, CI/CD, PyPI publish, docs!</li>
+</ul>
+<hr>
+</section>
+<section id="overview-of-the-automated-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="overview-of-the-automated-workflow">Overview of the Automated Workflow</h2>
+<p><img src="./assets/workflow-overview.png" class="img-fluid"></p>
+<hr>
+</section>
+<section id="background-on-automation-tools" class="level2">
+<h2 class="anchored" data-anchor-id="background-on-automation-tools">Background on Automation Tools</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><code>pre-commit</code> (local)</p>
+<ul>
+<li>Run before each commit</li>
+<li>Defined in <code>.pre-commit-config.yaml</code></li>
+<li>Find hooks on <a href="https://pre-commit.com/hooks.html">pre-commit.com/hooks</a></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><code>GitHub Actions</code> (remote)</p>
+<ul>
+<li>Triggered on <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows">GitHub defined events</a> (push, PR, schedule, manual, release trigger, comment)</li>
+<li>Defined in <code>.github/workflows/*.yml</code></li>
+<li>Find Actions on <a href="https://github.com/marketplace?type=actions">GitHub Marketplace</a></li>
+</ul>
+</div>
+</div>
+<hr>
+</section>
+<section id="which-tool-for-which-job" class="level2">
+<h2 class="anchored" data-anchor-id="which-tool-for-which-job">Which Tool for Which Job?</h2>
+<ul>
+<li>Keep the local dev environment snappy with <code>pre-commit</code> hooks.
+<ul>
+<li>Linting, formatting, type-checking, doc checks.</li>
+</ul></li>
+<li>Offload other tasks to <code>GitHub Actions</code> CI/CD.
+<ul>
+<li>Long running tasks like tests, type checking, building docs</li>
+<li>Publishing to PyPI, deploying documentation</li>
+<li>Rely on different triggers like issue updates, PR merges, releases.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="deep-dive-1-publishing" class="level2">
+<h2 class="anchored" data-anchor-id="deep-dive-1-publishing">Deep Dive #1: Publishing</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># .github/workflows/publish.yml</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> Python package</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">push</span><span class="kw">:</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">tags</span><span class="kw">:</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">"v*.*.*"</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">build</span><span class="kw">:</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">permissions</span><span class="kw">:</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">id-token</span><span class="kw">:</span><span class="at"> write</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v5</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> astral-sh/setup-uv@v7</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">run</span><span class="kw">:</span><span class="at"> uv build</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">run</span><span class="kw">:</span><span class="at"> uv publish --trusted-publishing always</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="deep-dive-1-publishing-contd" class="level2">
+<h2 class="anchored" data-anchor-id="deep-dive-1-publishing-contd">Deep Dive #1: Publishing (contd)</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li>Register Action as a trusted publisher on pypi.org</li>
+<li>pypi.org -&gt; manage -&gt; account -&gt; publishing</li>
+</ul>
+<ul>
+<li>Will not require username/password i.e.&nbsp;<code>uv publish</code> just works!</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><img src="./assets/pypi-form.png" class="img-fluid"></p>
+</div>
+</div>
+<hr>
+</section>
+<section id="deep-dive-2-automated-release-notes" class="level2">
+<h2 class="anchored" data-anchor-id="deep-dive-2-automated-release-notes">Deep Dive #2: Automated Release Notes</h2>
+<p><img src="./assets/release-notes-workflow.png" class="img-fluid"></p>
+<p>Manual touchpoints to the process:</p>
+<ul>
+<li>Label the issue while creating it (e.g., <code>enhancement</code>, <code>bug</code>).</li>
+<li>Creating the GitHub Release:
+<ul>
+<li>Draft a Release &gt; Select tag &gt; Generate release notes</li>
+<li><code>gh release create &lt;tag&gt; --generate-notes</code></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="deep-dive-2-automated-release-notes-contd" class="level2">
+<h2 class="anchored" data-anchor-id="deep-dive-2-automated-release-notes-contd">Deep Dive #2: Automated Release Notes (contd)</h2>
+<p><img src="./assets/release-notes.png" class="img-fluid"></p>
+<hr>
+</section>
+<section id="deep-dive-2-automated-release-notes-contd-1" class="level2">
+<h2 class="anchored" data-anchor-id="deep-dive-2-automated-release-notes-contd-1">Deep Dive #2: Automated Release Notes (contd)</h2>
+<p>GitHub supported <a href="https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes">automated release notes generation</a>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># .github/release.yml</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">changelog</span><span class="kw">:</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">exclude</span><span class="kw">:</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">labels</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"no releasenotes"</span><span class="kw">]</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">categories</span><span class="kw">:</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">title</span><span class="kw">:</span><span class="at"> New Features 🎉</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">labels</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"enhancement"</span><span class="kw">]</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">title</span><span class="kw">:</span><span class="at"> Bugfixes 🐛</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">labels</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"bug"</span><span class="kw">]</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">title</span><span class="kw">:</span><span class="at"> Documentation 📖</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">labels</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"docs"</span><span class="kw">]</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">title</span><span class="kw">:</span><span class="at"> Maintenance 🔧</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">labels</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"*"</span><span class="kw">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="deep-dive-2-automated-release-notes-contd-2" class="level2">
+<h2 class="anchored" data-anchor-id="deep-dive-2-automated-release-notes-contd-2">Deep Dive #2: Automated Release Notes (contd)</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># .github/workflows/sync-closing-labels.yml</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> Sync Closing Labels</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> pull_request_target</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">sync</span><span class="kw">:</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">permissions</span><span class="kw">:</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">pull-requests</span><span class="kw">:</span><span class="at"> write</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Sync labels for a pull request with its linked issues</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> williambdean/closing-labels@v0.0.6</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">env</span><span class="kw">:</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">GH_TOKEN</span><span class="kw">:</span><span class="at"> ${{ github.token }}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="deep-dive-3-pre-commit-hooks" class="level2">
+<h2 class="anchored" data-anchor-id="deep-dive-3-pre-commit-hooks">Deep Dive #3: Pre-commit Hooks</h2>
+<p>Don’t forget <code>pre-commit install</code>!</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># .pre-commit-config.yaml</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">repos</span><span class="kw">:</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">repo</span><span class="kw">:</span><span class="at"> https://github.com/astral-sh/ruff-pre-commit</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">rev</span><span class="kw">:</span><span class="at"> v0.14.2</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">hooks</span><span class="kw">:</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ruff-check</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">types_or</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">python</span><span class="kw">,</span><span class="at"> pyi</span><span class="kw">]</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">args</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"--fix"</span><span class="kw">,</span><span class="at"> </span><span class="st">"--output-format=full"</span><span class="kw">]</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ruff-format</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">types_or</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">python</span><span class="kw">,</span><span class="at"> pyi</span><span class="kw">]</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">repo</span><span class="kw">:</span><span class="at"> https://github.com/pre-commit/pre-commit-hooks</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">rev</span><span class="kw">:</span><span class="at"> v6.0.0</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">hooks</span><span class="kw">:</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> debug-statements</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> trailing-whitespace</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> end-of-file-fixer</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> check-toml</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> check-yaml</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> check-added-large-files</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">exclude</span><span class="kw">:</span><span class="at"> ^docs/</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="deep-dive-4-cicd-for-testing" class="level2">
+<h2 class="anchored" data-anchor-id="deep-dive-4-cicd-for-testing">Deep Dive #4: CI/CD for Testing</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># .github/workflows/tests.yml</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> Tests</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Trigger only of relevant paths change</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">push</span><span class="kw">:</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">paths</span><span class="kw">:</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">"src/**"</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">"pyproject.toml"</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">"tests/**"</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">pull_request</span><span class="kw">:</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">paths</span><span class="kw">:</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">"src/**"</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">"pyproject.toml"</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">"tests/**"</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">test</span><span class="kw">:</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> python</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co">    # Run on multiple Python versions in parallel</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">strategy</span><span class="kw">:</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">matrix</span><span class="kw">:</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">python-version</span><span class="kw">:</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> </span><span class="st">"3.9"</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> </span><span class="st">"3.10"</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> </span><span class="st">"3.11"</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> </span><span class="st">"3.12"</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> </span><span class="st">"3.13"</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">env</span><span class="kw">:</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">UV_PYTHON</span><span class="kw">:</span><span class="at"> ${{ matrix.python-version }}</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v5</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install uv</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> astral-sh/setup-uv@v7</span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install the package with dev dependencies</span></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">run</span><span class="kw">:</span><span class="at"> uv sync --locked --all-extras --dev</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Run test suite</span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">run</span><span class="kw">:</span><span class="at"> uv run pytest tests/</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>Just a few yaml files to set up a robust workflow!</p>
+<p><img src="./assets/tree-with-pre-commit.png" class="img-fluid"></p>
+<hr>
+</section>
+<section id="key-takeaways-tips" class="level2">
+<h2 class="anchored" data-anchor-id="key-takeaways-tips">Key Takeaways &amp; Tips</h2>
+<ul>
+<li><strong>Start with pain points; it’s progressive.</strong> Linting is crucial (code quality, doc errors, style consistency).</li>
+<li><strong>Automation pays off:</strong> Low maintenance, reusable workflows. Automate high-pain tasks first.</li>
+<li><strong>Contribute wisely:</strong> Gauge project, respect maintainers. Create your own for extensions.</li>
+<li><strong>Embrace automation:</strong> Let tools handle complexity.</li>
+<li><strong>Learn &amp; adapt:</strong> Observe other projects’ release strategies (e.g., <code>narwhals</code> cat emojis!).</li>
+</ul>
+<hr>
+</section>
+<section id="draft-slides" class="level1">
+<h1>Draft Slides</h1>
+<hr>
+<section id="qa-resources" class="level2">
+<h2 class="anchored" data-anchor-id="qa-resources">Q&amp;A / Resources</h2>
+<ul>
+<li><a href="https://github.com/williambdean">Your GitHub Profile</a></li>
+<li><a href="https://github.com/williambdean/frame-search">frame-search repository</a></li>
+<li><a href="https://peps.python.org/">Relevant PEPs (518, 621)</a></li>
+<li><a href="https://pre-commit.com/hooks.html">pre-commit hooks website</a></li>
+<li><a href="https://docs.astral.sh/uv/">uv documentation</a></li>
+<li><a href="https://narwhals.readthedocs.io/en/latest/">narwhals documentation</a></li>
+<li><a href="#appendix">Appendix</a></li>
+</ul>
+<hr>
+</section>
+<section id="deep-dive-3-pre-commit-hooks-1" class="level2">
+<h2 class="anchored" data-anchor-id="deep-dive-3-pre-commit-hooks-1">Deep Dive #3: Pre-commit Hooks</h2>
+<ul>
+<li>Crucial for local quality checks (linting, formatting, type-checking).</li>
+<li><strong>Fast feedback:</strong> Aim for 5-10 second runtime. Not for long test suites (use CI/CD).</li>
+<li>Run in CI/CD too (catches local bypasses).</li>
+<li>Examples: Docs checks, Linting (Ruff), Type checking (MyPy, <code>ty</code>), Code trimming.</li>
+<li><strong>Custom Hooks:</strong> Run local scripts for tailored automation. Many available on <code>pre-commit.com</code>.</li>
+</ul>
+<hr>
+</section>
+<section id="deep-dive-labels-automated-release-notes" class="level2">
+<h2 class="anchored" data-anchor-id="deep-dive-labels-automated-release-notes">Deep Dive: Labels &amp; Automated Release Notes</h2>
+<ul>
+<li>Configured via <code>.github</code> file (defines categories &amp; order).</li>
+<li><strong>Action:</strong> <a href="https://github.com/williambdean/closing-labels"><code>williambdean/closing-labels</code></a> transfers labels from issues to PRs.
+<ul>
+<li>Label issues when jotting down ideas; no need to label PRs.</li>
+</ul></li>
+<li><strong>Prioritize:</strong> Breaking &gt; New Features &gt; Bugs &gt; Maintenance.</li>
+<li>Multiple labels: PR appears under first matching category.</li>
+<li>Use <code>no-releasenotes</code> for trivial changes.</li>
+<li>Edit notes post-generation (GitHub UI) for enrichment.</li>
+</ul>
+<hr>
+</section>
+<section id="deep-dive-cicd-for-testing-and-using-test-pypi" class="level2">
+<h2 class="anchored" data-anchor-id="deep-dive-cicd-for-testing-and-using-test-pypi">Deep Dive: CI/CD for Testing (and using test PyPI)</h2>
+<ul>
+<li>CI/CD: Testing, lock files, docs, PyPI publish, doc deployment.</li>
+<li>Failures: Rerun (fluke) or fix (error).</li>
+<li><strong>Minimal overhead:</strong> PyPI steps ~2-5 min. (Test suites are usually longer).</li>
+<li><strong>Pro-tip:</strong> Use <strong>test PyPI</strong> for pre-release validation (e.g., on PRs).
+<ul>
+<li>Example: <code>pymc-marketing</code> workflow installs from test PyPI and checks import/version.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="deep-dive-the-release-process" class="level2">
+<h2 class="anchored" data-anchor-id="deep-dive-the-release-process">Deep Dive: The Release Process</h2>
+<ul>
+<li>Manual version bump in a PR (e.g., <code>uv version --bump major</code>).</li>
+<li>GitHub Release (UI) triggers:
+<ul>
+<li>Automated PyPI publishing.</li>
+<li>Automated documentation deployment.</li>
+</ul></li>
+<li><strong>Fast turnaround:</strong> 2-5 min from merge to PyPI live.</li>
+</ul>
+<hr>
+</section>
+<section id="tools-used" class="level2">
+<h2 class="anchored" data-anchor-id="tools-used">Tools Used</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li>GitHub Labels</li>
+<li>GitHub CLI</li>
+<li>GitHub Actions
+<ul>
+<li>actions/labeler</li>
+<li>williambdean/closing-labels</li>
+</ul></li>
+<li>pre-commit</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<ul>
+<li>ruff for formatting and linting</li>
+<li>uv for package management and publishing (with <code>uvx</code> for trying out tools)</li>
+<li>pytest</li>
+<li>narwhals</li>
+<li>pandas and polars API extensions</li>
+<li>mkdocs or marimo for documentation</li>
+</ul>
+</div>
+</div>
+<hr>
+</section>
+<section id="key-takeaways-tips-1" class="level2">
+<h2 class="anchored" data-anchor-id="key-takeaways-tips-1">Key Takeaways &amp; Tips</h2>
+<ul>
+<li><strong>Start with pain points; it’s progressive.</strong> Linting is crucial (code quality, doc errors, style consistency).</li>
+<li><strong>Automation pays off:</strong> Low maintenance, reusable workflows. Automate high-pain tasks first.</li>
+<li><strong>Contribute wisely:</strong> Gauge project, respect maintainers. Create your own for extensions.</li>
+<li><strong>Embrace automation:</strong> Let tools handle complexity.</li>
+<li><strong>Learn &amp; adapt:</strong> Observe other projects’ release strategies (e.g., <code>narwhals</code> cat emojis!).</li>
+</ul>
+<hr>
+</section>
+<section id="qa-resources-1" class="level2">
+<h2 class="anchored" data-anchor-id="qa-resources-1">Q&amp;A / Resources</h2>
+<ul>
+<li><a href="https://github.com/williambdean">Your GitHub Profile</a></li>
+<li><a href="https://github.com/williambdean/frame-search">frame-search repository</a></li>
+<li><a href="https://peps.python.org/">Relevant PEPs (518, 621)</a></li>
+<li><a href="https://pre-commit.com/hooks.html">pre-commit hooks website</a></li>
+<li><a href="https://docs.astral.sh/uv/">uv documentation</a></li>
+<li><a href="https://narwhals.readthedocs.io/en/latest/">narwhals documentation</a></li>
+<li><a href="#appendix">Appendix</a></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="appendix" class="level1">
+<h1>Appendix</h1>
+<section id="alternative-to-pypi-install-from-github" class="level2">
+<h2 class="anchored" data-anchor-id="alternative-to-pypi-install-from-github">Alternative to PyPI: Install from GitHub</h2>
+<ul>
+<li>You can install packages directly from GitHub. This allows much of the workflow (CI/CD, etc.) to still be in place without the PyPI release step.</li>
+</ul>
+</section>
+<section id="frame-search-pain-point" class="level2">
+<h2 class="anchored" data-anchor-id="frame-search-pain-point"><code>frame-search</code> Pain Point</h2>
+<ul>
+<li>Handling advanced, nested logic when parsing search strings.</li>
+<li>Balancing regex with grammar-type libraries while keeping it maintainable within Python, avoiding obscure new syntaxes.</li>
+</ul>
+</section>
+<section id="frame-search-custom-operators" class="level2">
+<h2 class="anchored" data-anchor-id="frame-search-custom-operators"><code>frame-search</code> Custom Operators</h2>
+<ul>
+<li>Current customization is primarily mapping column names to alternative, user-friendly keys.</li>
+<li>Cannot define new operators like <code>is_weekend:date</code> unless it’s an existing column.</li>
+<li>Future idea: extending <code>is:</code> operator for Boolean columns.</li>
+<li>Offers flexibility for filtering on dates, numerical values, ranges.</li>
+</ul>
+</section>
+<section id="frame-search-performance" class="level2">
+<h2 class="anchored" data-anchor-id="frame-search-performance"><code>frame-search</code> Performance</h2>
+<ul>
+<li>Performance depends on the underlying <code>narwhals</code> backend (Polars, Pandas, etc.).</li>
+<li>Users typically know their backend; with Polars LazyFrames, explicit <code>collect()</code> is needed.</li>
+<li>Primary use case is interactive scenarios (e.g., Marimo) and as an alternative to other filtering logic.</li>
+</ul>
+</section>
+<section id="biggest-maintenance-headache" class="level2">
+<h2 class="anchored" data-anchor-id="biggest-maintenance-headache">Biggest Maintenance Headache</h2>
+<ul>
+<li>Risk of version updates, dependency management (tight/loose constraints).</li>
+<li>Yearly Python updates.</li>
+<li>Mitigation: Keep packages lean, follow projects/maintainers.</li>
+</ul>
+</section>
+<section id="biggest-brain-drain-eliminated" class="level2">
+<h2 class="anchored" data-anchor-id="biggest-brain-drain-eliminated">Biggest Brain-Drain Eliminated</h2>
+<ul>
+<li>The <em>personalization</em> and <em>predictability</em> of the workflow.</li>
+<li>Automating tasks like the GitHub release trigger or issue labeling makes the process easy and predictable.</li>
+</ul>
+</section>
+<section id="most-immediate-roi" class="level2">
+<h2 class="anchored" data-anchor-id="most-immediate-roi">Most Immediate ROI</h2>
+<ul>
+<li>Automating <strong>documentation and PyPI release</strong>.</li>
+<li>Releases are infrequent, making it hard to remember steps; automation removes cognitive load and reduces errors.</li>
+</ul>
+</section>
+<section id="pre-commit-vs.-cicd" class="level2">
+<h2 class="anchored" data-anchor-id="pre-commit-vs.-cicd">Pre-commit vs.&nbsp;CI/CD</h2>
+<ul>
+<li><strong>Rule of thumb:</strong> If a check takes &gt; ~30 seconds, push to CI/CD. Aim for 5-10 seconds for pre-commit.</li>
+<li>Pre-commit for snappy local feedback; CI/CD for longer-running tasks.</li>
+<li>Optimize CI/CD with <code>pytest-split</code>, caching, and fast installers like <code>uv</code>.</li>
+</ul>
+</section>
+<section id="pre-commit-hooks-to-avoid" class="level2">
+<h2 class="anchored" data-anchor-id="pre-commit-hooks-to-avoid">Pre-commit Hooks to Avoid</h2>
+<ul>
+<li>Potentially slow type checking hooks like <code>MyPy</code> if not implemented from the start.</li>
+<li>Emphasizes running <code>pre-commit run --all-files</code> and running pre-commit in CI/CD for consistency.</li>
+</ul>
+</section>
+<section id="ty-for-type-checking" class="level2">
+<h2 class="anchored" data-anchor-id="ty-for-type-checking"><code>ty</code> for Type Checking</h2>
+<ul>
+<li>Experimented with <code>uvx</code> but not in production due to perceived (unidentified) instability.</li>
+<li>Aware of its potential and that the team seeks feedback.</li>
+</ul>
+</section>
+<section id="customizing-release-notes-format" class="level2">
+<h2 class="anchored" data-anchor-id="customizing-release-notes-format">Customizing Release Notes Format</h2>
+<ul>
+<li>Primarily uses GitHub’s auto-generated notes; not sure how to add custom headers/footers.</li>
+<li>Learns by observing other projects’ templates and trying to recreate them.</li>
+</ul>
+</section>
+<section id="alternative-tools" class="level2">
+<h2 class="anchored" data-anchor-id="alternative-tools">Alternative Tools</h2>
+<ul>
+<li><strong>CI/CD:</strong> GitHub Actions (built-in preference); aware of GitHub Apps/marketplace actions.</li>
+<li><strong>Data manipulation:</strong> <code>Ibis</code> (supports many backends), but <code>narwhals</code> also supports <code>Ibis</code>.</li>
+</ul>
+</section>
+<section id="inspired-projects" class="level2">
+<h2 class="anchored" data-anchor-id="inspired-projects">Inspired Projects</h2>
+<ul>
+<li>PyMC, PyMC-Marketing.</li>
+<li><code>narwhals</code> project (clean automation, cat emojis in PRs).</li>
+<li>General approach: Observe consistent quality/clean processes in other projects.</li>
+</ul>
+</section>
+<section id="single-most-important-advice" class="level2">
+<h2 class="anchored" data-anchor-id="single-most-important-advice">Single Most Important Advice</h2>
+<ul>
+<li><strong>Start with pain points; it’s progressive.</strong></li>
+<li>Prioritize linting (code quality, doc error catching, style consistency).</li>
+<li>Automate high-pain, high-uncertainty tasks like publishing first.</li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
