@@ -1,0 +1,24 @@
+/* For general slide content */
+.reveal p {
+  font-size: 0.9em; /* Adjust as needed */
+}
+
+/* For headings */
+.reveal h1 {
+  font-size: 2em;
+}
+
+/* For headings */
+.reveal h2 {
+  font-size: 1.1em;
+}
+
+/* For code blocks */
+/* .reveal pre code { */
+/*   font-size: 0.9em; */
+/* } */
+
+/* For speaker notes (if applicable) */
+.reveal .speaker-notes {
+  font-size: 0.8em;
+}
